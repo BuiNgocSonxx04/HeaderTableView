@@ -6,18 +6,15 @@
 //
 
 import UIKit
+import Reusable
 
-final class AnimalTableViewCell: UITableViewCell {
+final class AnimalTableViewCell: UITableViewCell, NibReusable {
     
-    @IBOutlet private weak var nameLabel: UILabel!
-    
+    @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var addressLabel: UILabel!
-    var animal: Animal! {
-        didSet {
-            self.nameLabel.text = self.animal.name
-            self.addressLabel.text = self.animal.address
-        }
-    }
+    
+    var animal: Animal!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -29,4 +26,13 @@ final class AnimalTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+//    func layoutInfo(name: String, address: String) {
+//        self.nameLabel?.text = name
+//        self.addressLabel?.text = address
+//    }
+    
+    func fillWithText(text: String?, address: String?) {
+        nameLabel.text = text
+        addressLabel.text = address
+    }
 }

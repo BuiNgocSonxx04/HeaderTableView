@@ -9,6 +9,8 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    @IBOutlet weak var tableView: UITableView!
+    
     var dictionaries = [DictionnaryPage(firstLetter: "A", list: [Animal(name: "Ant", address: "Hà Nội")]),
                         DictionnaryPage(firstLetter: "B", list: [Animal(name: "Bat", address: "+ 1 uy tín cho dân chơi"),
                                                                  Animal(name: "Butterfly", address: "Đà Nẵng")]),
@@ -23,9 +25,6 @@ class ViewController: UIViewController {
                                                                  Animal(name: "Gorrila", address: "aaa")]),
                                                 ]
     
-    
-    @IBOutlet weak var tableView: UITableView!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         initView()
@@ -35,8 +34,10 @@ class ViewController: UIViewController {
     func initView() {
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.register(UINib(nibName: "AnimalTableViewCell", bundle: nil), forCellReuseIdentifier: "AnimalTableViewCell")
-        tableView.register(UINib(nibName: "HeaderTableViewCell", bundle: nil), forCellReuseIdentifier: "HeaderTableViewCell")
+        //tableView.register(UINib(nibName: "AnimalTableViewCell", bundle: nil), forCellReuseIdentifier: "AnimalTableViewCell")
+        //tableView.register(UINib(nibName: "HeaderTableViewCell", bundle: nil), forCellReuseIdentifier: "HeaderTableViewCell")
+        tableView.register(cellType: AnimalTableViewCell.self)
+        tableView.register(cellType: HeaderTableViewCell.self)
     }
 }
 
@@ -50,14 +51,10 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        if let  cell = tableView.dequeueReusableCell(withIdentifier: "AnimalTableViewCell", for: indexPath) as? AnimalTableViewCell  {
-            
-            cell.animal = self.dictionaries[indexPath.section].list[indexPath.row]
-            
+        let cell = tableView.dequeueReusableCell(for: indexPath) as AnimalTableViewCell
+            cell.fillWithText(text: dictionaries[indexPath.section].list[indexPath.row].name, address: dictionaries[indexPath.section].list[indexPath.row].address)
             return cell
-        }
         
-        return UITableViewCell()
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -66,12 +63,11 @@ extension ViewController: UITableViewDataSource, UITableViewDelegate {
     
     //MARK:- Header
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let headerView = UIView.init(frame: CGRect(x: 0, y: 0, width: tableView.frame.size.width, height: 40))
         let headerCell = tableView.dequeueReusableCell(withIdentifier: "HeaderTableViewCell") as! HeaderTableViewCell
-        headerCell.frame = headerView.bounds
-        headerCell.lblName.text = dictionaries[section].firstLetter
-        headerView.addSubview(headerCell)
-        return headerView
+        headerCell.configView(title: dictionaries[section].firstLetter)
+        return headerCell
     }
-
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 40 
+    }
 }

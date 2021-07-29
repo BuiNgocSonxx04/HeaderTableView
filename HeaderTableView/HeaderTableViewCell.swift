@@ -6,10 +6,12 @@
 //
 
 import UIKit
+import Reusable
 
-class HeaderTableViewCell: UITableViewCell {
+class HeaderTableViewCell: UITableViewCell, NibReusable {
 
     @IBOutlet weak var lblName: UILabel!
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
@@ -21,4 +23,8 @@ class HeaderTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
     
+    func configView(title: String) {
+        self.frame = self.bounds
+        lblName?.text = title
+    }
 }
